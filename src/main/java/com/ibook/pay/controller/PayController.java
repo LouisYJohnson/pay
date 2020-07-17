@@ -1,7 +1,7 @@
 package com.ibook.pay.controller;
 
 import com.ibook.pay.pojo.PayInfo;
-import com.ibook.pay.service.impl.PayService;
+import com.ibook.pay.service.impl.PayServiceImpl;
 import com.lly835.bestpay.config.WxPayConfig;
 import com.lly835.bestpay.enums.BestPayTypeEnum;
 import com.lly835.bestpay.model.PayResponse;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class PayController {
 
     @Autowired
-    private PayService payService;
+    private PayServiceImpl payServiceImpl;
     @Autowired
     private WxPayConfig wxPayConfig;
 
@@ -30,7 +30,7 @@ public class PayController {
                                @RequestParam("amount") BigDecimal amount,
                                @RequestParam("payType") BestPayTypeEnum bestPayTypeEnum
     ) {
-        PayResponse payResponse = payService.create(orderId, amount, bestPayTypeEnum);
+        PayResponse payResponse = payServiceImpl.create(orderId, amount, bestPayTypeEnum);
 
         //支付方式不同,渲染就不同,微信native的codeUrl在支付宝的pc就不好使
         //微信native支付返回一个二维码的地址,codeUrl,然后我们把这个地址给转成二维码
@@ -60,7 +60,7 @@ public class PayController {
     //一般都是@Controller与@ResponseBody一起用
     @ResponseBody
     public String asyncNotify(@RequestBody String notifyData) {
-        return payService.asyncNotify(notifyData);
+        return payServiceImpl.asyncNotify(notifyData);
     }
 
     //通过订单号查询支付状态的API
@@ -68,6 +68,6 @@ public class PayController {
     @ResponseBody
     public PayInfo queryByOrderId(@RequestParam String orderId) {
         log.info("查询支付记录...");
-        return payService.queryByOrderId(orderId);
+        return payServiceImpl.queryByOrderId(orderId);
     }
 }

@@ -4,7 +4,11 @@ spring:
     username: root
     password: "0"
     url: jdbc:mysql://127.0.0.1:3306/mall?characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&useUnicode=true
-
+  rabbitmq:
+    addresses: 192.168.0.110
+    port: 5672
+    username: guest
+    password: guest
 mybatis:
   configuration:
     #如果这个不设置的话,pojo中使用驼峰命名法的变量就没办法和表中的字段对应上
@@ -26,4 +30,6 @@ alipay:
   aliPayPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtojdtkETo4OEsQLeyyPwtWK9ZqYJANq6jjXC74vk9n/r88yW577y7VdxcK9X/F/wvR7D8of7lndYdhg6xZro0eO2skPZTU+A549J7tfzahVbIBAS+x1WPFJwPtVrfBBvkwHL8PT+YnMcxKyBxOa6wo8fzJs1NgU1+qnDCpwUFyv59GUfdzBvTPL1fY3ZzvRHFHbapevVltbO/jNV0thb8dafmcJXl8lnjQy3XlH3eTH28tlVfqickacfRl/WSD8WN3dGgF7dTDKYfSR7YB7jsHe6VzoHM3UnD9/yQbi/Z3ZrL7yOxEjq4tfrKlZIW7ZCoUpOU4QdPIRhLeC6nWyGrQIDAQAB"
   notifyUrl: http://ibook-mall.natapp1.cc/pay/notify
   returnUrl: http://127.0.0.1
+
+
 

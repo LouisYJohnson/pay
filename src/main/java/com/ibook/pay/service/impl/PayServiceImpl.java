@@ -1,5 +1,6 @@
 package com.ibook.pay.service.impl;
 
+import com.google.gson.Gson;
 import com.ibook.pay.dao.PayInfoMapper;
 import com.ibook.pay.enums.PayPlatformEnum;
 import com.ibook.pay.pojo.PayInfo;
@@ -13,6 +14,7 @@ import com.lly835.bestpay.model.PayResponse;
 import com.lly835.bestpay.service.BestPayService;
 import com.lly835.bestpay.service.impl.BestPayServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +22,19 @@ import java.math.BigDecimal;
 
 @Slf4j
 @Service
-public class PayService implements IPayService {
+public class PayServiceImpl implements IPayService {
+
+    private static final String QUEUE_PAY_NOTIFY = "payNotify";
 
     @Autowired
     private BestPayService bestPayService;
+
     @Autowired
     //这里标红是idea识别问题,没有影响
     private PayInfoMapper payInfoMapper;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     @Override
     //因为有两种支付方式,所以传入支付的枚举类,并在方法中做判断,不同的支付方式对应不同的处理方法
@@ -90,7 +98,9 @@ public class PayService implements IPayService {
                 throw new RuntimeException("异步通知中的金额与数据库里的不一致,orderNo=" + payResponse.getOrderId());
             }
             //TODO pay发送MQ消息,mall接受MQ消息(mall还没写好,后面搞)
-
+            //最好传一个json到消息队列中,如果传对象在rabbitmq上看不见对象的信息
+            //因为在实际的生产环境中也是要到可视化管理界面去看到底哪里有问题,所以还是变成json更好
+            amqpTemplate.convertAndSend(QUEUE_PAY_NOTIFY, new Gson().toJson(payInfo));
 
             //到这里,说明没支付且订单金额相同
             //3.如果通过,修改订单的支付状态
