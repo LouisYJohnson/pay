@@ -88,7 +88,7 @@ public class PayServiceImpl implements IPayService {
             //发出告警:钉钉,短信告警,查看这种严重情况是咋回事
             throw new RuntimeException("通过orderNo查询到的结果是null");
         }
-        //如果还没有支付,此时来比较金额对不对
+        //如果此时订单在系统中还没有支付而在微信那边已经支付了,此时来比较金额对不对
         if (!payInfo.getPlatformStatus().equals(OrderStatusEnum.SUCCESS.name())) {
             //Double 类型比较大小,精度问题不好控制
             if (payInfo.getPayAmount().compareTo(BigDecimal.valueOf(payResponse.getOrderAmount())) != 0) {
